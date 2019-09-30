@@ -13,9 +13,7 @@ module.exports = class Object {
     }
 
     distanceTo(object) {
-        const dx = this.position.x - object.position.x;
-        const dy = this.position.x - object.position.y;
-        return Math.sqrt(dx * dx + dy * dy);
+        return this.position.distanceTo(object.position);
     }
 
     setRotation(rot) {

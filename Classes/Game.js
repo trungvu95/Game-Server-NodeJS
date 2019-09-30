@@ -6,20 +6,29 @@ module.exports = class Game {
     constructor() {
         this.sockets = {};
         this.players = {};
+        this.disconnect = [];
+        this.dead = [];
         this.bullets = [];
         this.lastUpdateTime = Date.now();
         this.shouldSendUpdate = false;
-        setInterval(this.update.bind(this), 1000 / 60);
+        setInterval(this.update.bind(this), 1000 / 120);
     }
 
     addPlayer(socket, message) {
-        this.sockets[socket.id] = socket;
+        if (!this.sockets[socket.id]) {
+            this.sockets[socket.id] = socket;
 
-        // const x = Constants.MAP_WIDTH;
-        // const y = Constants.MAP_HEIGHT;
+            // const x = Constants.MAP_WIDTH;
+            // const y = Constants.MAP_HEIGHT;
 
-        this.players[socket.id] = new Player(socket.id, message.type);
-        console.log(`New Player [${socket.id}] Registered`)
+            this.players[socket.id] = new Player(socket.id, message.type);
+            console.log(`New Player [${socket.id}] Registered`)
+        }
+    }
+
+    disconnectPlayer(socket) {
+        this.disconnect.push(socket.id);
+        this.removePlayer(socket);
     }
 
     removePlayer(socket) {
@@ -31,8 +40,8 @@ module.exports = class Game {
         if (this.players[socket.id]) {
             if (input.fire)
                 this.players[socket.id].setFire(true);
-            if (input.move && !this.players[socket.id].hasMove())
-                this.players[socket.id].setMove(true, input);
+            if (input.move && !this.players[socket.id].hasMoved())
+                this.players[socket.id].setMove(true, input.move);
         }
     }
 
@@ -79,6 +88,7 @@ module.exports = class Game {
             const player = this.players[playerID];
             if (player.hp <= 0) {
                 socket.emit(Constants.MSG_TYPES.GAME_OVER)
+                this.dead.push(socket.id);
                 this.removePlayer(socket);
             }
         })
@@ -99,6 +109,11 @@ module.exports = class Game {
         } else {
             this.shouldSendUpdate = true;
         }
+    }
+
+    reInitRemoved() {
+        this.disconnect = {};
+        this.dead = {};
     }
 
     createUpdate(player) {
@@ -127,5 +142,7 @@ module.exports = class Game {
         this.checkDeadPlayers();
 
         this.sendUpdates();
+
+        this.reInitRemoved();
     }
 }

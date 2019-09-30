@@ -5,19 +5,9 @@ module.exports = class Vector2 {
         this.rotation = rotation;
     }
 
-    Magnitude() {
-        return Math.sqrt((this.x * this.x) + (this.y * this.y));
-    }
-
-    Normalized() {
-        var mag = this.Magnitude();
-        return new Vector2(this.x / mag, this.y / nag);
-    }
-
-    Distance(OtherVect = Vector2) {
-        var direction = new Vector2();
-        direction.x = OtherVect.x - this.x;
-        direction.y = OtherVect.y - this.y;
-        return direction.Magnitude();
+    distance(otherVector) {
+        const dx = this.x - otherVector.x;
+        const dy = this.x - otherVector.y;
+        return Math.sqrt(dx * dx + dy * dy);
     }
 }

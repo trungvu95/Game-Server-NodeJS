@@ -16,7 +16,7 @@ function handleInput(input) {
 }
 
 function onDisconnect() {
-    game.removePlayer(this);
+    game.disconnectPlayer(this);
 }
 io.on('connection', function (socket) {
     console.log(("New Player Connected!"));

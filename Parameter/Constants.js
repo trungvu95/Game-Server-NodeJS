@@ -1,5 +1,5 @@
-this.MAP_HEIGHT = 1080;
-this.MAP_WIDTH = 1920;
+this.MAP_HEIGHT = 10;
+this.MAP_WIDTH = 18;
 this.MSG_TYPES = {
     JOIN_GAME: 'join',
     INPUT: 'input',

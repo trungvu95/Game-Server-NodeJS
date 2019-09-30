@@ -15,19 +15,18 @@ module.exports = class Player extends Object {
     }
 
     update(dt) {
-        super.update(dt);
-
-        this.position.x = Math.max(0, Math.min(Constants.MAP_WIDTH, this.position.x));
-        this.position.y = Math.max(0, Math.min(Constants.MAP_HEIGHT, this.position.y));
-
-        if (this.isFiring) {
-            this.setFire(false);
-            this.fire();
-        }
-
         if (this.isMoving) {
             this.setMove(false);
             this.move();
+        }
+
+        this.position.x = Math.max(-Constants.MAP_WIDTH / 2, Math.min(Constants.MAP_WIDTH / 2, this.position.x));
+        this.position.y = Math.max(-Constants.MAP_HEIGHT / 2, Math.min(Constants.MAP_HEIGHT / 2, this.position.y));
+
+        if (this.isFiring) {
+            console.log('FIRE');
+            this.setFire(false);
+            return this.fire();
         }
 
         return null;
@@ -42,7 +41,9 @@ module.exports = class Player extends Object {
     }
 
     setMove(move, input) {
-        if (move) this.lastPosition = new Vector2(input.x, input.y, input.rotation);
+        if (move) {
+            this.lastPosition = new Vector2(input.x, input.y, input.rotation);
+        }
         this.isMoving = move;
     }
 
@@ -50,7 +51,7 @@ module.exports = class Player extends Object {
         this.position = this.lastPosition;
     }
 
-    hasMove() {
+    hasMoved() {
         return this.isMoving;
     }
 
