@@ -1,13 +1,7 @@
 const io = require('socket.io')(process.env.PORT || 5000);
 const Constants = require('./Parameter/Constants');
-const Vector2 = require('./Classes/Vector2');
-const Player = require('./Classes/Player');
-const Bullet = require('./Classes/Bullet');
 const Game = require('./Classes/Game');
 const Room = require('./Classes/Room');
-const players = [];
-const sockets = [];
-const rooms = [];
 
 console.log("Started listening on port 5000");
 
