@@ -11,6 +11,7 @@ module.exports = class Bullet extends Object {
 
     update(dt) {
         super.update(dt);
-        return this.position.x < 0 || this.position.x > Constants.MAP_WIDTH || this.position.y < 0 || this.position.y > Constants.MAP_HEIGHT;
+        return this.position.x < Constants.MAP_WIDTH / 2 || this.position.x > Constants.MAP_WIDTH / 2
+            || this.position.y < Constants.MAP_HEIGHT / 2 || this.position.y > Constants.MAP_HEIGHT / 2;
     }
 }
