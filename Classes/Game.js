@@ -7,7 +7,7 @@ module.exports = class Game {
         this.sockets = {};
         this.players = {};
         this.disconnect = [];
-        this.dead = [];
+        this.destroyed = [];
         this.bullets = [];
         this.lastUpdateTime = Date.now();
         this.shouldSendUpdate = false;
@@ -50,6 +50,7 @@ module.exports = class Game {
         this.bullets.forEach(bullet => {
             if (bullet.update(dt)) {
                 bulletsToRemove.push(bullet);
+                this.destroyed.push(bullet.id);
             }
         });
         this.bullets = this.bullets.filter(
@@ -69,13 +70,14 @@ module.exports = class Game {
 
     collision() {
         const destroyedBullets = applyCollisions(
-            this.players,
+            Object.values(this.players),
             this.bullets,
         );
         destroyedBullets.forEach(b => {
             if (this.players[b.parentID]) {
                 this.players[b.parentID].onDealtDamage();
             }
+            this.destroyed.push(b.id);
         });
         this.bullets = this.bullets.filter(
             bullet => !destroyedBullets.includes(bullet),
@@ -88,7 +90,7 @@ module.exports = class Game {
             const player = this.players[playerID];
             if (player.hp <= 0) {
                 socket.emit(Constants.MSG_TYPES.GAME_OVER)
-                this.dead.push(socket.id);
+                this.destroyed.push(socket.id);
                 this.removePlayer(socket);
             }
         })
@@ -104,7 +106,7 @@ module.exports = class Game {
                     this.createUpdate(player),
                 );
             });
-
+            this.reInitRemoved();
             this.shouldSendUpdate = false;
         } else {
             this.shouldSendUpdate = true;
@@ -112,8 +114,8 @@ module.exports = class Game {
     }
 
     reInitRemoved() {
-        this.disconnect = {};
-        this.dead = {};
+        this.disconnect = [];
+        this.destroyed = [];
     }
 
     createUpdate(player) {
@@ -121,11 +123,12 @@ module.exports = class Game {
             p => p !== player,
         );
         const nearbyBullets = this.bullets;
-
         return {
             t: Date.now(),
             me: player.serializeForUpdate(),
             others: nearbyPlayers.map(p => p.serializeForUpdate()),
+            destroyed: this.destroyed,
+            disconnected: this.disconnect,
             bullets: nearbyBullets.map(b => b.serializeForUpdate()),
         };
     }
@@ -142,7 +145,5 @@ module.exports = class Game {
         this.checkDeadPlayers();
 
         this.sendUpdates();
-
-        this.reInitRemoved();
     }
 }

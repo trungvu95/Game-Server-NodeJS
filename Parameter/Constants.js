@@ -8,9 +8,16 @@ this.MSG_TYPES = {
 };
 
 this.PLAYER_SPEED = 0.5;
-this.PLAYER_MAP_HP = 100;
+this.PLAYER_MAP_HP = {
+    GUNNER: 100,
+    DEFENDER: 10000,
+};
 this.PLAYER_RADIUS = 0.1;
+this.PLAYER_TYPE = {
+    GUNNER: 'gunner',
+    DEFENDER: 'defender',
+}
 
-this.BULLET_SPEED = 1;
-this.BULLET_DAMAGE = 1;
+this.BULLET_SPEED = 10;
+this.BULLET_DAMAGE = 50;
 this.BULLET_RADIUS = 0.1;

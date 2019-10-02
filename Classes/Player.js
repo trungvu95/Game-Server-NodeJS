@@ -6,8 +6,16 @@ const Constants = require('../Parameter/Constants');
 module.exports = class Player extends Object {
     constructor(id, type, position = new Vector2()) {
         super(id, position, Constants.PLAYER_SPEED);
+        switch (type) {
+            case Constants.PLAYER_TYPE.DEFENDER:
+                this.position = new Vector2(0, -Constants.MAP_HEIGHT / 2, 0);
+                this.hp = Constants.PLAYER_MAP_HP.DEFENDER;
+                break;
+            default:
+                this.hp = Constants.PLAYER_MAP_HP.GUNNER;
+                break;
+        }
         this.type = type;
-        this.hp = Constants.PLAYER_MAP_HP;
         this.fireCoolDown = 0;
         this.isFiring = false;
         this.isMoving = false;
@@ -24,7 +32,6 @@ module.exports = class Player extends Object {
         this.position.y = Math.max(-Constants.MAP_HEIGHT / 2, Math.min(Constants.MAP_HEIGHT / 2, this.position.y));
 
         if (this.isFiring) {
-            console.log('FIRE');
             this.setFire(false);
             return this.fire();
         }
@@ -57,6 +64,10 @@ module.exports = class Player extends Object {
 
     takeBulletDamage() {
         this.hp -= Constants.BULLET_DAMAGE;
+    }
+
+    onDealtDamage() {
+        console.log('HIT');
     }
 
     serializeForUpdate() {

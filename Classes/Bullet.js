@@ -11,7 +11,14 @@ module.exports = class Bullet extends Object {
 
     update(dt) {
         super.update(dt);
-        return this.position.x < Constants.MAP_WIDTH / 2 || this.position.x > Constants.MAP_WIDTH / 2
-            || this.position.y < Constants.MAP_HEIGHT / 2 || this.position.y > Constants.MAP_HEIGHT / 2;
+        return this.position.x < -Constants.MAP_WIDTH / 2 || this.position.x > Constants.MAP_WIDTH / 2
+            || this.position.y < -Constants.MAP_HEIGHT / 2 || this.position.y > Constants.MAP_HEIGHT / 2;
+    }
+
+    serializeForUpdate() {
+        return {
+            ...(super.serializeForUpdate()),
+            parentID: this.parentID,
+        }
     }
 }
