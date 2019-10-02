@@ -22,7 +22,7 @@ module.exports = class Game {
             // const y = Constants.MAP_HEIGHT;
 
             this.players[socket.id] = new Player(socket.id, message.type);
-            console.log(`New Player [${socket.id}] Registered`)
+            //console.log(`New Player [${socket.id}] Registered`)
         }
     }
 
@@ -90,7 +90,7 @@ module.exports = class Game {
             const player = this.players[playerID];
             if (player.hp <= 0) {
                 socket.emit(Constants.MSG_TYPES.GAME_OVER)
-                this.destroyed.push(socket.id);
+                this.destroyed.unshift(socket.id);
                 this.removePlayer(socket);
             }
         })
@@ -123,13 +123,14 @@ module.exports = class Game {
             p => p !== player,
         );
         const nearbyBullets = this.bullets;
+        if (this.destroyed.length > 0) console.log(this.destroyed);
         return {
             t: Date.now(),
             me: player.serializeForUpdate(),
             others: nearbyPlayers.map(p => p.serializeForUpdate()),
+            bullets: nearbyBullets.map(b => b.serializeForUpdate()),
             destroyed: this.destroyed,
             disconnected: this.disconnect,
-            bullets: nearbyBullets.map(b => b.serializeForUpdate()),
         };
     }
 
@@ -145,5 +146,17 @@ module.exports = class Game {
         this.checkDeadPlayers();
 
         this.sendUpdates();
+    }
+
+    getUserList() {
+        var playerList = [];
+        Object.keys(this.players).forEach(playerID => {
+            playerList.push([playerID, this.players[playerID].type, this.players[playerID].hp]);
+        })
+        return playerList.length > 0 ? playerList : [['', '', '']];
+    }
+
+    getUser(playerID) {
+        return this.players[playerID];
     }
 }

@@ -67,7 +67,7 @@ module.exports = class Player extends Object {
     }
 
     onDealtDamage() {
-        console.log('HIT');
+        //console.log('HIT');
     }
 
     serializeForUpdate() {

@@ -5,6 +5,7 @@ this.MSG_TYPES = {
     INPUT: 'input',
     GAME_OVER: 'dead',
     GAME_UPDATE: 'update',
+    CHAT: 'chat',
 };
 
 this.PLAYER_SPEED = 0.5;
@@ -18,6 +19,6 @@ this.PLAYER_TYPE = {
     DEFENDER: 'defender',
 }
 
-this.BULLET_SPEED = 10;
+this.BULLET_SPEED = 15;
 this.BULLET_DAMAGE = 50;
 this.BULLET_RADIUS = 0.1;

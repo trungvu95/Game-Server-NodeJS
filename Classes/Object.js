@@ -8,8 +8,8 @@ module.exports = class Object {
     }
 
     update(dt) {
-        this.position.x += dt * this.speed * Math.cos(this.position.rotation);
-        this.position.y += dt * this.speed * Math.sin(this.position.rotation);
+        this.position.x += dt * this.speed * Math.sin(this.position.rotation + Math.PI);
+        this.position.y -= dt * this.speed * Math.cos(this.position.rotation + Math.PI);
     }
 
     distanceTo(object) {
